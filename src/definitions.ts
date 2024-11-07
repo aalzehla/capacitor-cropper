@@ -4,6 +4,7 @@ export interface CropImageOptions {
   x?: number;
   y?: number;
   rounded?: boolean;
+  title?: string;
 }
 
 export interface CropImageState {
