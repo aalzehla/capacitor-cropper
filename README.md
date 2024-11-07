@@ -41,9 +41,9 @@ crop(options: CropImageOptions) => Promise<CropImageState>
 
 #### CropImageState
 
-| Prop      | Type                |
-| --------- | ------------------- |
-| **`uri`** | <code>string</code> |
+| Prop         | Type                |
+| ------------ | ------------------- |
+| **`result`** | <code>string</code> |
 
 
 #### CropImageOptions
