@@ -1,6 +1,6 @@
 {
   "name": "@aalzehla/capacitor-cropper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Image Cropper for Capacitor",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
