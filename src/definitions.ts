@@ -1,9 +1,9 @@
 
 export interface CropImageOptions {
   uri: string;
-  aspectRatio: string;
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
+  rounded?: boolean;
 }
 
 export interface CropImageState {

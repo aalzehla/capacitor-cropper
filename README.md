@@ -52,5 +52,7 @@ crop(options: CropImageOptions) => Promise<CropImageState>
 | ----------------- | ------------------- |
 | **`uri`**         | <code>string</code> |
 | **`aspectRatio`** | <code>string</code> |
+| **`x`**           | <code>number</code> |
+| **`y`**           | <code>number</code> |
 
 </docgen-api>
