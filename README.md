@@ -48,11 +48,12 @@ crop(options: CropImageOptions) => Promise<CropImageState>
 
 #### CropImageOptions
 
-| Prop              | Type                |
-| ----------------- | ------------------- |
-| **`uri`**         | <code>string</code> |
-| **`aspectRatio`** | <code>string</code> |
-| **`x`**           | <code>number</code> |
-| **`y`**           | <code>number</code> |
+| Prop          | Type                 |
+| ------------- | -------------------- |
+| **`uri`**     | <code>string</code>  |
+| **`x`**       | <code>number</code>  |
+| **`y`**       | <code>number</code>  |
+| **`rounded`** | <code>boolean</code> |
+| **`title`**   | <code>string</code>  |
 
 </docgen-api>
