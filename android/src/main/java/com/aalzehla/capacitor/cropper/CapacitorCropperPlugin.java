@@ -47,6 +47,8 @@ public class CapacitorCropperPlugin extends Plugin {
 
         boolean rounded = Boolean.TRUE.equals(savedCall.getBoolean("rounded", false));
 
+        String title = savedCall.getString("title");
+
         if (sourceUri == null) {
             savedCall.reject("Image pick failed");
             return;
@@ -58,8 +60,11 @@ public class CapacitorCropperPlugin extends Plugin {
         options.withMaxResultSize(800, 800);
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.ROTATE, UCropActivity.ALL);
         options.setCompressionFormat(Bitmap.CompressFormat.PNG);
-        options.setCompressionQuality(90);
+        options.setCompressionQuality(80);
         options.setCircleDimmedLayer(rounded);
+        if (title != null) {
+            options.setToolbarTitle(title);
+        }
         if (x != 0 || y != 0) {
             options.withAspectRatio(x, y);
         }
