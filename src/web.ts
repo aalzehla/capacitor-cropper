@@ -5,6 +5,6 @@ import type { CapacitorCropperPlugin, CropImageOptions, CropImageState } from '.
 export class CapacitorCropperWeb extends WebPlugin implements CapacitorCropperPlugin {
   async crop(options: CropImageOptions): Promise<CropImageState> {
     console.log('ECHO', options);
-    return { uri: options.uri};
+    return { result: options.uri};
   }
 }

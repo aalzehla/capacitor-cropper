@@ -5,7 +5,7 @@ export interface CropImageOptions {
 }
 
 export interface CropImageState {
-  uri: string;
+  result: string;
 }
 
 export interface CapacitorCropperPlugin {
