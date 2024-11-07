@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
+
+import androidx.activity.result.ActivityResult;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -16,6 +19,7 @@ import com.yalantis.ucrop.UCrop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.Objects;
 
 @CapacitorPlugin(name = "CapacitorCropper")
 public class CapacitorCropperPlugin extends Plugin {
@@ -26,35 +30,57 @@ public class CapacitorCropperPlugin extends Plugin {
 
     @PluginMethod
     public void crop(PluginCall call) {
+        Log.i("CapacitorCropperPlugin", "crop called");
         savedCall = call;
         if (savedCall.getData() == null) {
             savedCall.reject("Image pick failed");
             return;
         }
-        Uri sourceUri = call.getString("uri") != null ? Uri.parse(call.getString("uri")) : null;
+        Uri sourceUri = savedCall.getString("uri") != null ? Uri.parse(savedCall.getString("uri")) : null;
+
+        Integer xValue = savedCall.getInt("x");
+        int x = (xValue != null) ? xValue : 0;
+
+        Integer yValue = savedCall.getInt("y");
+        int y = (yValue != null) ? yValue : 0;
+
         if (sourceUri == null) {
             savedCall.reject("Image pick failed");
             return;
         }
-        Uri destinationUri = Uri.fromFile(new File(getContext().getCacheDir(), "cropped_image.jpg"));
+        Uri destinationUri = Uri.fromFile(new File(getContext().getCacheDir(), "cropped_image.png"));
 
 
-        UCrop.of(sourceUri, destinationUri)
-                .withAspectRatio(16, 9)
-                .withMaxResultSize(800, 800)
-                .start(getActivity());
+        UCrop.Options options = new UCrop.Options();
+        options.withMaxResultSize(800, 800);
+        if (x != 0 || y != 0) {
+            options.withAspectRatio(x, y);
+        }
+
+
+        UCrop uCrop = UCrop.of(sourceUri, destinationUri)
+                .withOptions(options);
+
+        Intent intent = uCrop.getIntent(getContext());
+        startActivityForResult(savedCall, intent, "handleCropResult");
 
     }
 
 
     @ActivityCallback
-    public void handleCropResult(Intent data) {
-        if (data != null && UCrop.getOutput(data) != null) {
-            Uri croppedUri = UCrop.getOutput(data);
+    public void handleCropResult(PluginCall call, ActivityResult result) {
+        Log.i("CapacitorCropperPlugin", "handleCropResult called");
+        if (call == null) {
+            savedCall.reject("Image crop failed");
+            return;
+        }
+        if (result != null && UCrop.getOutput(Objects.requireNonNull(result.getData())) != null) {
+            Uri croppedUri = UCrop.getOutput(result.getData());
             String base64Image = convertUriToBase64(croppedUri);
 
             JSObject ret = new JSObject();
-            ret.put("result", implementation.echo(base64Image));
+            String base64 = "data:image/png;base64," + base64Image;
+            ret.put("result", base64);
             savedCall.resolve(ret);
         } else {
             savedCall.reject("Image crop failed");
@@ -65,7 +91,7 @@ public class CapacitorCropperPlugin extends Plugin {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), uri);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 80, outputStream);
             byte[] byteArray = outputStream.toByteArray();
             return Base64.encodeToString(byteArray, Base64.DEFAULT);
         } catch (Exception e) {
