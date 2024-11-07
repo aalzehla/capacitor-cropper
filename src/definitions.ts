@@ -1,3 +1,13 @@
+
+export interface CropImageOptions {
+  uri: string;
+  aspectRatio: string;
+}
+
+export interface CropImageState {
+  result: string;
+}
+
 export interface CapacitorCropperPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  crop(options: CropImageOptions): Promise<CropImageState>;
 }
