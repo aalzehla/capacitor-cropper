@@ -15,14 +15,23 @@ public class CapacitorCropperPlugin: CAPPlugin, CAPBridgedPlugin {
     private var call: CAPPluginCall?
     
     @objc func crop(_ call: CAPPluginCall) {
-        let value = call.getString("uri") ?? ""
-        self.call = call
-        let dataDecoded: Data = Data(base64Encoded: value, options: NSData.Base64DecodingOptions(rawValue: 0))!
-        let decodedimage:UIImage = UIImage(data: dataDecoded)!
-        let cropViewController = Mantis.cropViewController(image: decodedimage);
-        cropViewController.delegate = self
-        bridge?.viewController?.present(cropViewController, animated: true, completion: nil)
-        
+        do {
+            let value = call.getString("uri") ?? ""
+            self.call = call
+            let index = value.index(value.startIndex, offsetBy: 7); // index with an offset of 6 characters
+            let str = value[index...];
+            let urlPath = String(str);
+            let url = URL(fileURLWithPath: urlPath);
+            let imageData:NSData = try NSData(contentsOf: url)
+            let image = UIImage(data: imageData as Data)
+            let cropViewController = Mantis.cropViewController(image: image!);
+            DispatchQueue.main.async {
+                cropViewController.delegate = self;
+                self.bridge?.viewController?.present(cropViewController, animated: true, completion: nil)
+            }
+        } catch {
+            // print("Error loading image : \(error)")
+        }
     }
 }
 
@@ -33,10 +42,11 @@ extension CapacitorCropperPlugin: CropViewControllerDelegate {
         self.call?.resolve([
             "result": base64
         ])
+        cropViewController.dismiss(animated: true)
     }
     
     public func cropViewControllerDidCancel(_ cropViewController: Mantis.CropViewController, original: UIImage) {
-        
+        cropViewController.dismiss(animated: true)
     }
     
     
