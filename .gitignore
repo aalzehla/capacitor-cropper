@@ -1,6 +1,7 @@
 # node files
 dist
 node_modules
+.npmrc
 
 # iOS files
 Pods
@@ -15,7 +16,6 @@ DerivedData/
 .swiftpm/configuration/registries.json
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
-
 
 # macOS files
 .DS_Store

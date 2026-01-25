@@ -1,7 +1,7 @@
 # @aalzehla/capacitor-cropper
 
 Image Cropper for Capacitor
-
+Supports capacitor 8
 ## Install
 
 ```bash
